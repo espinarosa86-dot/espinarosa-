@@ -11,8 +11,17 @@ import AdminProducts from './pages/admin/AdminProducts';
 import AdminCategories from './pages/admin/AdminCategories';
 import AdminOrders from './pages/admin/AdminOrders';
 import { ThemeProvider } from './context/ThemeContext';
+import { useEffect } from 'react';
+import { useProductStore } from './store/productStore';
 
 function App() {
+  const { fetchProducts, fetchCategories } = useProductStore();
+
+  useEffect(() => {
+    fetchProducts();
+    fetchCategories();
+  }, [fetchProducts, fetchCategories]);
+
   return (
     <ThemeProvider>
       <BrowserRouter>

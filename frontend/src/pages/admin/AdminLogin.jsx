@@ -6,20 +6,16 @@ import { Lock } from 'lucide-react';
 export default function AdminLogin() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const login = useAuthStore(state => state.login);
+  const { login, isLoading, error } = useAuthStore();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Use environment variables for admin credentials (set these in Vercel)
-    const adminEmail = import.meta.env.VITE_ADMIN_EMAIL || 'admin@espinarosa.com';
-    const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123';
-
-    if (email === adminEmail && password === adminPassword) {
-      login({ name: 'Admin', email, isAdmin: true }, 'mock-jwt-token');
+    try {
+      await login(email, password);
       navigate('/admin/dashboard');
-    } else {
-      alert('Credenciales inválidas');
+    } catch (err) {
+      // Error is handled by store and displayed in UI
     }
   };
 
@@ -37,6 +33,13 @@ export default function AdminLogin() {
             Acceso exclusivo para administradores
           </p>
         </div>
+        
+        {error && (
+          <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm text-center">
+            {error}
+          </div>
+        )}
+
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
@@ -66,9 +69,12 @@ export default function AdminLogin() {
           <div>
             <button
               type="submit"
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition"
+              disabled={isLoading}
+              className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white transition ${
+                isLoading ? 'bg-primary-400 cursor-not-allowed' : 'bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500'
+              }`}
             >
-              Iniciar Sesión
+              {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
             </button>
           </div>
         </form>

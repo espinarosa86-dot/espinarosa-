@@ -1,4 +1,12 @@
 const mongoose = require('mongoose');
+const dns = require('dns');
+
+// Configurar Google DNS para evitar bloqueos de SRV por el proveedor de internet
+try {
+  dns.setServers(['8.8.8.8', '8.8.4.4']);
+} catch (error) {
+  console.log('No se pudo configurar DNS, continuando...');
+}
 
 let mongoServer;
 
