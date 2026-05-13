@@ -11,8 +11,11 @@ export default function AdminLogin() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: Connect to backend. Using mock for now.
-    if (email === 'admin@espinarosa.com' && password === 'admin123') {
+    // Use environment variables for admin credentials (set these in Vercel)
+    const adminEmail = import.meta.env.VITE_ADMIN_EMAIL || 'admin@espinarosa.com';
+    const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123';
+
+    if (email === adminEmail && password === adminPassword) {
       login({ name: 'Admin', email, isAdmin: true }, 'mock-jwt-token');
       navigate('/admin/dashboard');
     } else {

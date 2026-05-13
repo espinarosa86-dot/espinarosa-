@@ -1,5 +1,5 @@
 export default function WhatsAppButton() {
-  const phoneNumber = "1234567890"; // TODO: Reemplazar con el número real
+  const phoneNumber = "573237321035"; 
   const message = "Hola! Vengo de EspinaRosa y me gustaría hacer una consulta.";
   
   const handleClick = () => {

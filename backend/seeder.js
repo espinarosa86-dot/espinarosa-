@@ -16,8 +16,8 @@ const importData = async () => {
     const createdUsers = await User.create([
       {
         name: 'Admin',
-        email: 'admin@espinarosa.com',
-        password: 'admin123',
+        email: process.env.ADMIN_EMAIL || 'admin@espinarosa.com',
+        password: process.env.ADMIN_PASSWORD || 'admin123',
         isAdmin: true,
       }
     ]);
