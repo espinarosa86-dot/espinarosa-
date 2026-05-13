@@ -32,19 +32,22 @@ const getProductById = async (req, res) => {
 // @route   POST /api/products
 // @access  Private/Admin
 const createProduct = async (req, res) => {
+  const { name, price, description, image, category, stock } = req.body;
+
   const product = new Product({
-    name: 'Sample name',
-    price: 0,
-    description: 'Sample description',
-    image: '/images/sample.jpg',
-    category: req.body.category || null,
-    stock: 0,
+    name,
+    price,
+    description,
+    image,
+    category,
+    stock,
     numReviews: 0,
   });
 
   try {
     const createdProduct = await product.save();
-    res.status(201).json(createdProduct);
+    const populatedProduct = await Product.findById(createdProduct._id).populate('category', 'name');
+    res.status(201).json(populatedProduct);
   } catch (error) {
     res.status(400).json({ message: 'Invalid product data' });
   }
@@ -61,14 +64,15 @@ const updateProduct = async (req, res) => {
 
     if (product) {
       product.name = name || product.name;
-      product.price = price || product.price;
+      product.price = price !== undefined ? price : product.price;
       product.description = description || product.description;
       product.image = image || product.image;
       product.category = category || product.category;
-      product.stock = stock || product.stock;
+      product.stock = stock !== undefined ? stock : product.stock;
 
       const updatedProduct = await product.save();
-      res.json(updatedProduct);
+      const populatedProduct = await Product.findById(updatedProduct._id).populate('category', 'name');
+      res.json(populatedProduct);
     } else {
       res.status(404).json({ message: 'Product not found' });
     }

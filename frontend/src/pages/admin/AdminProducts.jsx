@@ -49,11 +49,12 @@ export default function AdminProducts() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const selectedCategory = storeCategories.find(c => c.name === formData.category);
     const productData = {
       ...formData,
       price: parseFloat(formData.price),
       stock: parseInt(formData.stock, 10),
-      category: { name: formData.category }
+      category: selectedCategory ? selectedCategory._id : null
     };
 
     if (editingProduct) {
