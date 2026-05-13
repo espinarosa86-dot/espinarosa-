@@ -37,8 +37,8 @@ const createProduct = async (req, res) => {
   const product = new Product({
     name,
     price,
-    description,
-    image,
+    description: description || 'Sin descripción',
+    image: image || 'https://via.placeholder.com/500',
     category,
     stock,
     numReviews: 0,
