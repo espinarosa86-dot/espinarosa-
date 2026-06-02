@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const https = require('https');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
@@ -27,4 +28,14 @@ connectDB();
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  
+  // Keep-alive ping para evitar que Render se duerma
+  const url = 'https://espinarosa-wjth.onrender.com/';
+  setInterval(() => {
+    https.get(url, (res) => {
+      console.log(`Ping automático para mantener despierto: ${res.statusCode}`);
+    }).on('error', (err) => {
+      console.error(`Error en el ping automático: ${err.message}`);
+    });
+  }, 14 * 60 * 1000); // Se ejecuta cada 14 minutos
 });
