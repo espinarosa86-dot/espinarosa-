@@ -13,7 +13,7 @@ export default function Shop() {
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get('search') || '';
 
-  const { products, categories: storeCategories } = useProductStore();
+  const { products, categories: storeCategories, isLoading } = useProductStore();
   const CATEGORIES = ['Todo', ...storeCategories.map(c => c.name)];
   
   const [selectedCategory, setSelectedCategory] = useState('Todo');
@@ -126,7 +126,13 @@ export default function Shop() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {filteredAndSortedProducts.length > 0 ? (
+          {isLoading && products.length === 0 ? (
+            <div className="col-span-full py-20 flex flex-col items-center justify-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mb-4"></div>
+              <p className="text-gray-500 dark:text-gray-400 text-lg">Despertando el servidor y cargando productos...</p>
+              <p className="text-xs text-gray-400 mt-2 max-w-md text-center">Como usamos un servidor gratuito en la nube, a veces tarda unos segundos en encender si lleva rato inactivo.</p>
+            </div>
+          ) : filteredAndSortedProducts.length > 0 ? (
             filteredAndSortedProducts.map(product => (
               <ProductCard key={product._id} product={product} />
             ))
