@@ -43,8 +43,10 @@ export default function AdminLogin() {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Email</label>
+              <label htmlFor="adminEmail" className="block text-sm font-medium text-gray-700">Email</label>
               <input
+                id="adminEmail"
+                name="email"
                 type="email"
                 required
                 value={email}
@@ -54,8 +56,10 @@ export default function AdminLogin() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Contraseña</label>
+              <label htmlFor="adminPassword" className="block text-sm font-medium text-gray-700">Contraseña</label>
               <input
+                id="adminPassword"
+                name="password"
                 type="password"
                 required
                 value={password}

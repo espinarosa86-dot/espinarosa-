@@ -15,4 +15,7 @@ const fix = async () => {
   console.log('Password fixed!');
   process.exit(0);
 };
-fix();
+fix().catch((err) => {
+  console.error('Failed to fix password:', err);
+  process.exit(1);
+});

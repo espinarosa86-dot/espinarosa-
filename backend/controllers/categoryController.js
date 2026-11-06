@@ -1,4 +1,5 @@
 const Category = require('../models/Category');
+const Product = require('../models/Product');
 
 // @desc    Fetch all categories
 // @route   GET /api/categories
@@ -18,14 +19,24 @@ const getCategories = async (req, res) => {
 const createCategory = async (req, res) => {
   const { name, description } = req.body;
 
+  if (!name || typeof name !== 'string') {
+    res.status(400).json({ message: 'Category name is required and must be a string' });
+    return;
+  }
+
+  const sanitizedName = String(name).trim();
+
   try {
-    const categoryExists = await Category.findOne({ name });
+    const categoryExists = await Category.findOne({ name: { $eq: sanitizedName } });
     if (categoryExists) {
       res.status(400).json({ message: 'Category already exists' });
       return;
     }
 
-    const category = await Category.create({ name, description });
+    const category = await Category.create({
+      name: sanitizedName,
+      description: typeof description === 'string' ? description.trim() : ''
+    });
     res.status(201).json(category);
   } catch (error) {
     res.status(400).json({ message: 'Invalid category data' });
@@ -38,12 +49,22 @@ const createCategory = async (req, res) => {
 const updateCategory = async (req, res) => {
   const { name, description } = req.body;
 
+  if (name !== undefined && typeof name !== 'string') {
+    res.status(400).json({ message: 'Category name must be a string' });
+    return;
+  }
+
+  if (description !== undefined && typeof description !== 'string') {
+    res.status(400).json({ message: 'Category description must be a string' });
+    return;
+  }
+
   try {
     const category = await Category.findById(req.params.id);
 
     if (category) {
-      category.name = name || category.name;
-      category.description = description || category.description;
+      category.name = name ? String(name).trim() : category.name;
+      category.description = description !== undefined ? String(description).trim() : category.description;
 
       const updatedCategory = await category.save();
       res.json(updatedCategory);
@@ -64,7 +85,6 @@ const deleteCategory = async (req, res) => {
 
     if (category) {
       // Check if products use this category before deleting (optional but recommended)
-      const Product = require('../models/Product');
       const productsWithCategory = await Product.find({ category: category._id });
       if (productsWithCategory.length > 0) {
         return res.status(400).json({ message: 'Cannot delete category with associated products' });

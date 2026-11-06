@@ -111,8 +111,12 @@ export default function AdminCategories() {
             
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nombre de la Categoría</label>
+                <label htmlFor="categoryName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Nombre de la Categoría
+                </label>
                 <input 
+                  id="categoryName"
+                  name="categoryName"
                   required 
                   type="text" 
                   value={categoryName} 

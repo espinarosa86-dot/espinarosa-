@@ -88,4 +88,7 @@ const importData = async () => {
   }
 };
 
-importData();
+importData().catch((err) => {
+  console.error(`Import execution error: ${err.message}`);
+  process.exit(1);
+});
