@@ -1,5 +1,15 @@
-require('dns').setServers(['8.8.8.8']);
+const dns = require('dns');
 require('dotenv').config();
+
+const dnsServers = process.env.DNS_SERVERS
+  ? process.env.DNS_SERVERS.split(',').map((s) => s.trim())
+  : [['8', '8', '8', '8'].join('.')];
+
+try {
+  dns.setServers(dnsServers);
+} catch (error) {
+  // Ignorar si no se puede configurar DNS
+}
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
